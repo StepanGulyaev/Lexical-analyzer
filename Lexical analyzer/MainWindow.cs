@@ -23,6 +23,8 @@ namespace Lexical_analyzer
 
         private void calculateButton_Click(object sender, EventArgs e)
             {
+            string inputString = inputStringBox.Text;
+            Lexeme lexeme = new Lexeme(inputString);
 
             }
         }
