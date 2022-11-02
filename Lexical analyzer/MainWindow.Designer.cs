@@ -25,10 +25,10 @@
         #endregion
 
         private System.Windows.Forms.TextBox inputStringBox;
-        private System.Windows.Forms.TextBox result_number;
-        private System.Windows.Forms.Button calculate;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label inputStringLabel;
+        private System.Windows.Forms.TextBox numberBox;
+        private System.Windows.Forms.Label numberLabel;
+        private System.Windows.Forms.Button calculateButton;
         }
     }
 
