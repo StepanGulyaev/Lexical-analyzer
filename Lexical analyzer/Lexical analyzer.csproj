@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="lexicalClasses\Dictionaries.cs" />
+    <Compile Include="lexicalClasses\bloc.cs" />
     <Compile Include="lexicalClasses\Lexeme.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
