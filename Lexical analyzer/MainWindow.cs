@@ -76,12 +76,16 @@ namespace Lexical_analyzer
                 {
                 if (lexes[0].type == "rank_words" && lexes[0] != lexes.Last())
                     {
-                    int i = 1;
-                    while(lexes[i].type != "rank_words"){i++;}
-                    if(lexes[0].value > lexes[i].value)
+                    Lexeme cur_rang_lex = lexes[0];
+                    Lexeme next_rang_lex = null;
+                    blockLexes.Add(lexes[0]);
+                    lexes.RemoveAt(0);
+                    for (int i = 1; i < lexes.Count; i++)
                         {
-                        blockLexes.Add(lexes[0]);
-                        lexes.RemoveAt(0);
+                        if(lexes[i].type == "rank_words") {next_rang_lex=lexes[i]; break;}
+                        }
+                    if (next_rang_lex == null || cur_rang_lex.value > next_rang_lex.value)
+                        {
                         Block block = new Block(blockLexes);
                         blockLexes.Clear();
                         blocks.Add(block);
