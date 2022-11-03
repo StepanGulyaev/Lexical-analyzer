@@ -46,7 +46,7 @@ namespace Lexical_analyzer
 
         private void calculateButton_Click(object sender, EventArgs e)
             {
-            string input = inputStringBox.Text;
+            string input = inputStringBox.Text.Trim();
             calculate(input);
             }
 
@@ -59,13 +59,16 @@ namespace Lexical_analyzer
                 Lexeme lex = new Lexeme(word);
                 lexes.Add(lex);
                 }
-            List<Block> inputblocks = splitInBlocks(lexes);
-            long blocksum = 0;
-            foreach(Block block in inputblocks)
+            if (!searchErrors(lexes))
                 {
-                blocksum += block.value;
+                List<Block> inputblocks = splitInBlocks(lexes);
+                long blocksum = 0;
+                foreach (Block block in inputblocks)
+                    {
+                    blocksum += block.value;
+                    }
+                numberBox.Text = blocksum.ToString();
                 }
-            numberBox.Text = blocksum.ToString();
             }
 
         private List<Block> splitInBlocks(List<Lexeme> lexes)
@@ -106,6 +109,66 @@ namespace Lexical_analyzer
                     }
                 }
             return blocks;
+            }
+
+        private bool searchErrors(List<Lexeme> lexes)
+            {
+            if(inputError(lexes) || syntaxError(lexes))
+                {
+                return true;
+                }
+            return false;
+            }
+
+        private bool inputError(List<Lexeme> lexes)
+            {
+            List<Lexeme> undefined_lexemes = new List<Lexeme>();
+            foreach (Lexeme lex in lexes)
+                {
+                if (lex.type == "undefined")
+                    {
+                    undefined_lexemes.Add(lex);
+                    }
+                }
+            if (undefined_lexemes.Count == 0) {return false;}
+            else 
+                {
+                string error_string = "Слова ";
+                foreach(Lexeme lex in undefined_lexemes) { error_string += $" \"{lex.lexeme}\","; }
+                error_string = error_string.Remove(error_string.Length - 1);
+                error_string += " написаны неправильно или не являются числительными английского языка";
+                MessageBox.Show(error_string, "Неккоректный ввод", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return true;
+                }
+            }
+
+        private bool syntaxError(List<Lexeme> lexes)
+            {
+            List<List<Lexeme>> pairs = new List<List<Lexeme>>();
+            for (int i = 0; i < lexes.Count - 1; i++)
+                {
+                if ( (lexes[i].type == lexes[i + 1].type) && (lexes[i].type != "rank_words") && (lexes[i+1].type != "rank_words"))
+                    {
+                    List<Lexeme> pair= new List<Lexeme>();
+                    pair.Add(lexes[i]);
+                    pair.Add(lexes[i + 1]);
+                    pairs.Add(pair);
+                    }
+                }
+
+            if(pairs.Count == 0) { return false;}
+            else
+                {
+                string error_string = "Словосочетания ";
+                foreach(List<Lexeme> pair in pairs)
+                    {
+                    error_string += $" \"{pair[0].lexeme}\" \"{pair[1].lexeme}\";";
+                    }
+                error_string = error_string.Remove(error_string.Length - 1);
+                error_string += " неккоректно составлены и не соответсвуют правилам английского языка;";
+                MessageBox.Show(error_string, "Неккоректный ввод", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return true;
+                }
             }
         }
     }
