@@ -32,7 +32,8 @@ namespace Lexical_analyzer
 
         internal static Dictionary<string, long> rank_words = new Dictionary<string, long>()
             {
-                {"hundred",100},{"thousand",1000},{"million",1000000},{"billion",1000000000}
+                {"hundred",100},{"thousand",1000},{"million",1000000},{"billion",1000000000},
+                {"hundreds",100},{"thousands",1000},{"millions",1000000},{"billions",1000000000}
             };
 
         public MainWindow()
