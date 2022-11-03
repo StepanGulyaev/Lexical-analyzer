@@ -67,7 +67,10 @@ namespace Lexical_analyzer
                     {
                     blocksum += block.value;
                     }
-                numberBox.Text = blocksum.ToString();
+                if(!onlyRankWordsError(inputblocks))
+                    {
+                    numberBox.Text = blocksum.ToString();
+                    }
                 }
             }
 
@@ -83,7 +86,7 @@ namespace Lexical_analyzer
                     Lexeme next_rang_lex = null;
                     blockLexes.Add(lexes[0]);
                     lexes.RemoveAt(0);
-                    for (int i = 1; i < lexes.Count; i++)
+                    for (int i = 0; i < lexes.Count; i++)
                         {
                         if(lexes[i].type == "rank_words") {next_rang_lex=lexes[i]; break;}
                         }
@@ -113,7 +116,7 @@ namespace Lexical_analyzer
 
         private bool searchErrors(List<Lexeme> lexes)
             {
-            if(inputError(lexes) || syntaxError(lexes))
+            if(inputError(lexes) || neighbourTypeError(lexes))
                 {
                 return true;
                 }
@@ -142,17 +145,27 @@ namespace Lexical_analyzer
                 }
             }
 
-        private bool syntaxError(List<Lexeme> lexes)
+        private bool neighbourTypeError(List<Lexeme> lexes)
             {
             List<List<Lexeme>> pairs = new List<List<Lexeme>>();
             for (int i = 0; i < lexes.Count - 1; i++)
                 {
-                if ( (lexes[i].type == lexes[i + 1].type) && (lexes[i].type != "rank_words") && (lexes[i+1].type != "rank_words"))
+                if(lexes[i].type != "rank_words" && lexes[i + 1].type != "rank_words")
                     {
-                    List<Lexeme> pair= new List<Lexeme>();
-                    pair.Add(lexes[i]);
-                    pair.Add(lexes[i + 1]);
-                    pairs.Add(pair);
+                    if
+                       ((lexes[i].type == lexes[i + 1].type) ||
+                       (lexes[i].type == "one_to_nine" && lexes[i + 1].type == "ten_to_ninteen") ||
+                       (lexes[i].type == "ten_to_ninteen" && lexes[i + 1].type == "one_to_nine") ||
+                       (lexes[i].type == "one_to_nine" && lexes[i + 1].type == "tens") ||
+                       (lexes[i].type == "ten_to_ninteen" && lexes[i + 1].type == "tens") ||
+                       (lexes[i].type == "tens" && lexes[i + 1].type == "ten_to_ninteen")
+                       )
+                        {
+                        List<Lexeme> pair = new List<Lexeme>();
+                        pair.Add(lexes[i]);
+                        pair.Add(lexes[i + 1]);
+                        pairs.Add(pair);
+                        }
                     }
                 }
 
@@ -166,9 +179,36 @@ namespace Lexical_analyzer
                     }
                 error_string = error_string.Remove(error_string.Length - 1);
                 error_string += " неккоректно составлены и не соответсвуют правилам английского языка;";
-                MessageBox.Show(error_string, "Неккоректный ввод", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(error_string, "Неккоректные словосочетания", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return true;
                 }
+            }
+
+        private bool onlyRankWordsError(List<Block> blocks)
+            {
+            List<int> num_of_rank_wors = new List<int>();
+            foreach (Block block in blocks)
+                {
+                int rank_words_counter = 0;
+                foreach (Lexeme lex in block.lexArr)
+                    {
+                    if (lex.type == "rank_words") { rank_words_counter++; }
+                    }
+                num_of_rank_wors.Add(rank_words_counter);
+                }
+
+            for(int i = 0; i < blocks.Count;i++)
+                {
+                if (num_of_rank_wors[i] == blocks[i].lexArr.Count()) 
+                    {
+                    string error_string = "Смысловая часть: \"";
+                    foreach(Lexeme lex in blocks[i].lexArr) { error_string += $" {lex.lexeme} ";}
+                    error_string += "\"  не соджержит неразрядных лексем";
+                    MessageBox.Show(error_string, "Неккоректные словосочетания", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return true;
+                    }
+                }
+            return false;
             }
         }
     }

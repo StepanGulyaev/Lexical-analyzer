@@ -8,8 +8,8 @@ namespace Lexical_analyzer
     {
     internal class Block
         {
-        List<Lexeme> lexArr = new List<Lexeme>();
-        List<long> rankArr = new List<long>();
+        public List<Lexeme> lexArr = new List<Lexeme>();
+        public List<long> rankArr = new List<long>();
         public long value;
 
         public Block(List<Lexeme> lexes)
