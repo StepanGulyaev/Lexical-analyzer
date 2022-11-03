@@ -57,18 +57,51 @@ namespace Lexical_analyzer
             foreach (string word in words)
                 {
                 Lexeme lex = new Lexeme(word);
-                if(lex.input_error())
+                lexes.Add(lex);
+                }
+            List<Block> inputblocks = splitInBlocks(lexes);
+            long blocksum = 0;
+            foreach(Block block in inputblocks)
+                {
+                blocksum += block.value;
+                }
+            numberBox.Text = blocksum.ToString();
+            }
+
+        private List<Block> splitInBlocks(List<Lexeme> lexes)
+            {
+            List<Block> blocks = new List<Block>();
+            List<Lexeme> blockLexes = new List<Lexeme>();
+            while (lexes.Count > 0)
+                {
+                if (lexes[0].type == "rank_words" && lexes[0] != lexes.Last())
                     {
-                    MessageBox.Show("Одно из слов введено неверно", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    numberBox.Clear();
-                    lex = null;
-                    break;
+                    int i = 1;
+                    while(lexes[i].type != "rank_words"){i++;}
+                    if(lexes[0].value > lexes[i].value)
+                        {
+                        blockLexes.Add(lexes[0]);
+                        lexes.RemoveAt(0);
+                        Block block = new Block(blockLexes);
+                        blockLexes.Clear();
+                        blocks.Add(block);
+                        }
+                    }
+                else if(lexes[0] == lexes.Last())
+                    {
+                    blockLexes.Add(lexes[0]);
+                    lexes.RemoveAt(0);
+                    Block block = new Block(blockLexes);
+                    blockLexes.Clear();
+                    blocks.Add(block);
                     }
                 else
                     {
-                    lexes.Add(lex);
+                    blockLexes.Add(lexes[0]);
+                    lexes.RemoveAt(0);
                     }
                 }
+            return blocks;
             }
         }
     }
