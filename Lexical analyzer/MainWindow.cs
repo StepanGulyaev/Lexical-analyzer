@@ -89,7 +89,8 @@ namespace Lexical_analyzer
                     lexes.RemoveAt(0);
                     for (int i = 0; i < lexes.Count; i++)
                         {
-                        if(lexes[i].type == "rank_words") {next_rang_lex=lexes[i]; break;}
+                        if(lexes[i].type == "rank_words") 
+                            {next_rang_lex=lexes[i]; break;}
                         }
                     if (next_rang_lex == null || cur_rang_lex.value > next_rang_lex.value)
                         {
@@ -138,7 +139,8 @@ namespace Lexical_analyzer
             else 
                 {
                 string error_string = "Слова ";
-                foreach(Lexeme lex in undefined_lexemes) { error_string += $" \"{lex.lexeme}\","; }
+                foreach(Lexeme lex in undefined_lexemes) 
+                    { error_string += $" \"{lex.lexeme}\","; }
                 error_string = error_string.Remove(error_string.Length - 1);
                 error_string += " написаны неправильно или не являются числительными английского языка";
                 MessageBox.Show(error_string, "Неккоректный ввод", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -173,13 +175,38 @@ namespace Lexical_analyzer
             if(pairs.Count == 0) { return false;}
             else
                 {
-                string error_string = "Словосочетания ";
+                string error_string = "Ошибочные словосочетания: ";
                 foreach(List<Lexeme> pair in pairs)
                     {
-                    error_string += $" \"{pair[0].lexeme}\" \"{pair[1].lexeme}\";";
+                    error_string += $" \"{pair[0].lexeme}\" \"{pair[1].lexeme}\" ";
+                    if(pair[0].type == "one_to_nine" && pair[1].type == "one_to_nine")
+                        {
+                        error_string += " - два соседних одноразрядных числа;";
+                        }
+                    else if( (pair[0].type == "one_to_nine" && pair[1].type == "ten_to_ninteen") ||
+                        (pair[0].type == "ten_to_ninteen" && pair[1].type == "one_to_nine") )
+                        {
+                        error_string += " - соседство числа от 1 до 9 и числа от 10 до 19;";
+                        }
+                    else if (pair[0].type == "one_to_nine" && pair[1].type == "tens")
+                        {
+                        error_string += " - одноразрядное число предшествует числу из группы десятков;";
+                        }
+                    else if ((pair[0].type == "ten_to_ninteen" && pair[1].type == "tens") ||
+                        (pair[0].type == "tens" && pair[1].type == "ten_to_ninteen"))
+                        {
+                        error_string += " - соседство числа от 10 до 19 с числом из группы десятков;";
+                        }
+                    else if (pair[0].type == "ten_to_ninteen" && pair[1].type == "ten_to_ninteen")
+                        {
+                        error_string += " - два соседних числа от 10 до 19;";
+                        }
+                    else if (pair[0].type == "tens"&& pair[1].type == "tens")
+                        {
+                        error_string += " - два соседних числа из разряда десятков;";
+                        }
                     }
                 error_string = error_string.Remove(error_string.Length - 1);
-                error_string += " неккоректно составлены и не соответсвуют правилам английского языка;";
                 MessageBox.Show(error_string, "Неккоректные словосочетания", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return true;
                 }
