@@ -20,7 +20,7 @@ namespace Lexical_analyzer
 
         internal static Dictionary<string, long> ten_to_ninteen = new Dictionary<string, long>()
             {
-                {"ten",10 },{"eleven",11},{"twelwe",12},{"thirteen",13},{"fourteen",14},{"fifteen",15},{"sixteen",16},{"seventeen",17},{"eighteen",18},
+                {"ten",10 },{"eleven",11},{"twelve",12},{"thirteen",13},{"fourteen",14},{"fifteen",15},{"sixteen",16},{"seventeen",17},{"eighteen",18},
                 {"nineteen",19}
             };
 
