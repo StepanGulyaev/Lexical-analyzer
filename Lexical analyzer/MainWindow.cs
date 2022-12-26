@@ -179,19 +179,25 @@ namespace Lexical_analyzer
                         {
                         error_string += " - два соседних одноразрядных числа;";
                         }
-                    else if( (pair[0].type == "one_to_nine" && pair[1].type == "ten_to_ninteen") ||
-                        (pair[0].type == "ten_to_ninteen" && pair[1].type == "one_to_nine") )
+                    else if(pair[0].type == "ten_to_ninteen" && pair[1].type == "one_to_nine" )
                         {
-                        error_string += " - соседство числа от 1 до 9 и числа от 10 до 19;";
+                        error_string += " - число от 10 до 19 стоит перед числом от 1 до 9;";
+                        }
+                    else if (pair[0].type == "one_to_nine" && pair[1].type == "ten_to_ninteen")
+                        {
+                        error_string += " - число от 1 до 9 стоит перед числом от 10 до 19;";
                         }
                     else if (pair[0].type == "one_to_nine" && pair[1].type == "tens")
                         {
-                        error_string += " - одноразрядное число предшествует числу из группы десятков;";
+                        error_string += " - одноразрядное число стоит перед числом из группы десятков;";
                         }
-                    else if ((pair[0].type == "ten_to_ninteen" && pair[1].type == "tens") ||
-                        (pair[0].type == "tens" && pair[1].type == "ten_to_ninteen"))
+                    else if (pair[0].type == "ten_to_ninteen" && pair[1].type == "tens")
                         {
-                        error_string += " - соседство числа от 10 до 19 с числом из группы десятков;";
+                        error_string += " - число от 10 до 19 стоит перед числом из группы десятков;";
+                        }
+                    else if (pair[0].type == "tens" && pair[1].type == "ten_to_ninteen")
+                        {
+                        error_string += " - число из группы десятков стоит перед числом от 10 до 19;";
                         }
                     else if (pair[0].type == "ten_to_ninteen" && pair[1].type == "ten_to_ninteen")
                         {
